@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {Image, View, Text} from "react-native";
+import {Image, Text, View} from "react-native";
 import {Organization} from "../database/modules/organizations/Organization";
 import Layout from "../constants/Layout";
+import {Ionicons} from "@expo/vector-icons";
 
 interface OrganizationDisplayProps {
     organization: Organization;
@@ -20,22 +21,23 @@ function OrganizationDisplay({organization}: OrganizationDisplayProps) {
         getImage();
     }, []);
 
+    const {width, height} = Layout.window;
     return (
         <View>
 
             {
                 image ?
-                <Image
-                    style={{
-                        width: Layout.window.width,
-                        height: Layout.window.height * 0.25,
-                        marginVertical: 10
-                    }}
-                    source={{
-                        uri: image || 'data:'
-                    }}
-                    resizeMode={'cover'}
-                />   : null
+                    <Image
+                        style={{
+                            width: width,
+                            height: height * 0.25,
+                            marginVertical: 10
+                        }}
+                        source={{
+                            uri: image || 'data:'
+                        }}
+                        resizeMode={'cover'}
+                    /> : <Ionicons name={'help-circle'} style={{alignSelf: 'center'}} size={height*0.25}  color={'white'}/>
 
             }
 
