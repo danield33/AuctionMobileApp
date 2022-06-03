@@ -2,6 +2,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+import {db} from "../database";
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -16,6 +17,11 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...FontAwesome.font,
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+        });
+
+        await fetch("http://localhost:8080/getData", { mode: "cors" }).then(async (res) => {
+          const data: any = await res.json();
+          return db.init(data);
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
