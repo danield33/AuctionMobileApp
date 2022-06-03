@@ -1,14 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Text, View} from "react-native";
+import React, {useCallback, useEffect, useState} from 'react';
+import {Image, Text, TouchableOpacity, View} from "react-native";
 import {Organization} from "../database/modules/organizations/Organization";
 import Layout from "../constants/Layout";
 import {Ionicons} from "@expo/vector-icons";
 
 interface OrganizationDisplayProps {
     organization: Organization;
+    onClick?: (id: string) => void;
+    isSelected: boolean
 }
 
-function OrganizationDisplay({organization}: OrganizationDisplayProps) {
+function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDisplayProps) {
 
     const [image, setImage] = useState("");
     const {description, name} = organization;
@@ -21,9 +23,13 @@ function OrganizationDisplay({organization}: OrganizationDisplayProps) {
         getImage();
     }, []);
 
+    const click = useCallback(() => {
+        onClick?.(organization.id);
+    }, [])
+
     const {width, height} = Layout.window;
     return (
-        <View>
+        <TouchableOpacity onPress={click}>
 
             {
                 image ?
@@ -31,7 +37,10 @@ function OrganizationDisplay({organization}: OrganizationDisplayProps) {
                         style={{
                             width: width,
                             height: height * 0.25,
-                            marginVertical: 10
+                            marginVertical: 10,
+                            //@ts-ignore
+                            borderWidth: 5 * Boolean(isSelected),
+                            borderColor: isSelected ? '#81e541' : undefined
                         }}
                         source={{
                             uri: image || 'data:'
@@ -60,7 +69,7 @@ function OrganizationDisplay({organization}: OrganizationDisplayProps) {
                 }}>{description}</Text>
             </View>
 
-        </View>
+        </TouchableOpacity>
     );
 }
 

@@ -1,26 +1,114 @@
-import {FlatList, ListRenderItem, StyleSheet, Text} from 'react-native';
+import {
+    Button,
+    FlatList,
+    KeyboardAvoidingView,
+    LayoutAnimation,
+    ListRenderItem,
+    StyleSheet,
+    Text,
+    TextInput,
+    Alert
+} from 'react-native';
 import {View} from '../components/Themed';
-import {useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import {db} from "../database";
 import OrganizationDisplay from "../components/OrganizationDisplay";
 import {Organization} from "../database/modules/organizations/Organization";
+import {FloatingAction, IActionProps} from "react-native-floating-action";
+import useColorScheme from "../hooks/useColorScheme";
+import Colors from '../constants/Colors';
+import Modal from "react-native-modal";
+import EditOrgModal from "../components/EditOrgModal";
+import {KeyboardDismissView} from "../components/KeyboardDismissView";
 
 export default function AuctionSelect() {
 
-    const [selectedIDs, setSelected] = useState<string[]>(db.organizations?.winners ?? []);
-
+    const [selectedIDs, setSelected] = useState<Set<string>>(new Set());
     const [organizations, setOrgs] = useState(db.organizations?.orgs ?? new Map());
+    const [searchText, setSearched] = useState('');
+
+    const theme = useColorScheme();
+    const [editModalOpen, setEditModalOpen] = useState(false),
+        handleEditOpen = () => setEditModalOpen(true),
+        handleEditClose = () => setEditModalOpen(false);
+
+    useEffect(() => {
+        db.socket.on("dataUpdate", (data: any) => {
+            db.init(data);
+            const map = db.organizations?.orgs ?? new Map();
+            setOrgs(map);
+        });
+    })
 
     const renderOrg: ListRenderItem<[string, Organization]> = ({item}) => {
-        const [, org] = item;
+        const [id, org] = item;
         if (!org) return null;
+        if(!org.name.toLowerCase().includes(searchText.toLowerCase())) return null;
 
-        return <OrganizationDisplay organization={org}/>
+        return <OrganizationDisplay organization={org} onClick={selectImage} isSelected={selectedIDs.has(id)}/>
     }
 
+    const selectImage = useCallback((id: string) => {
+        if(selectedIDs.has(id))
+            selectedIDs.delete(id)
+        else selectedIDs.add(id)
+        setSelected(new Set(selectedIDs))
+    }, [selectedIDs]);
+
+    const sendImages = useCallback(() => {
+        if(!selectedIDs.size) return Alert.alert('Invalid', 'Please select at least one item.')
+        Alert.alert('Are you sure', 'Are you sure you want to send these item?', [
+            {
+                text: 'Yes',
+                onPress: () => {
+                    db.socket.emit("displayNewWinner", [...selectedIDs]);
+                    setSelected(new Set());
+                },
+            },
+            {
+                text: 'Cancel',
+                style: 'cancel'
+            }
+        ])
+    }, []);
+
+    const actions: IActionProps[] = useMemo(() => [
+        {
+            text: 'Send',
+            name: 'send',
+            color: Colors[theme].tint
+        },
+        // {
+        //     text: 'New Entry',
+        //     name: 'new_entry',
+        //     color: Colors[theme].background
+        // },
+        {
+            text: 'Deselect All',
+            name: 'deselect',
+            color: Colors[theme].background
+        },
+    ], []);
+
+    const actionFuncs = {
+        new_entry: handleEditOpen,
+        send: sendImages
+    } as { [index: string]: () => void };
 
     return (
-        <View style={styles.container}>
+        <KeyboardDismissView style={styles.container}>
+
+            <TextInput style={{
+                backgroundColor: Colors[theme].tint,
+                width: '90%',
+                fontSize: 20,
+                fontWeight: '500',
+                margin: 10,
+                borderRadius: 5
+            }} placeholder={'Search'} placeholderTextColor={'black'} onChange={e => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                setSearched(e.nativeEvent.text);
+            }}/>
 
             <View style={{flex: 1}}>
                 <FlatList data={[...organizations]}
@@ -28,8 +116,20 @@ export default function AuctionSelect() {
                           keyExtractor={(org: [string, Organization]) => org[0]}/>
             </View>
 
+            <FloatingAction
+                actions={actions}
+                onPressItem={(name?: string) => name ? actionFuncs[name]() : void 0}
+                //@ts-ignore
+                iconColor={'gold'}
+            />
 
-        </View>
+            <Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>
+                {/*<View style={{padding: 20}}>*/}
+                    <EditOrgModal close={handleEditClose}/>
+                {/*</View>*/}
+            </Modal>
+
+        </KeyboardDismissView>
     );
 }
 
