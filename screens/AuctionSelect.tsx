@@ -1,14 +1,4 @@
-import {
-    Button,
-    FlatList,
-    KeyboardAvoidingView,
-    LayoutAnimation,
-    ListRenderItem,
-    StyleSheet,
-    Text,
-    TextInput,
-    Alert
-} from 'react-native';
+import {Alert, FlatList, LayoutAnimation, ListRenderItem, StyleSheet, TextInput} from 'react-native';
 import {View} from '../components/Themed';
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {db} from "../database";
@@ -38,25 +28,25 @@ export default function AuctionSelect() {
             const map = db.organizations?.orgs ?? new Map();
             setOrgs(map);
         });
-    })
+    }, [])
 
-    const renderOrg: ListRenderItem<[string, Organization]> = ({item}) => {
+    const renderOrg: ListRenderItem<[string, Organization]> = useCallback(({item}) => {
         const [id, org] = item;
         if (!org) return null;
-        if(!org.name.toLowerCase().includes(searchText.toLowerCase())) return null;
+        if (!org.name.toLowerCase().includes(searchText.toLowerCase())) return null;
 
         return <OrganizationDisplay organization={org} onClick={selectImage} isSelected={selectedIDs.has(id)}/>
-    }
+    }, [selectedIDs, searchText])
 
     const selectImage = useCallback((id: string) => {
-        if(selectedIDs.has(id))
+        if (selectedIDs.has(id))
             selectedIDs.delete(id)
         else selectedIDs.add(id)
         setSelected(new Set(selectedIDs))
     }, [selectedIDs]);
 
     const sendImages = useCallback(() => {
-        if(!selectedIDs.size) return Alert.alert('Invalid', 'Please select at least one item.')
+
         Alert.alert('Are you sure', 'Are you sure you want to send these item?', [
             {
                 text: 'Yes',
@@ -70,7 +60,7 @@ export default function AuctionSelect() {
                 style: 'cancel'
             }
         ])
-    }, []);
+    }, [selectedIDs]);
 
     const actions: IActionProps[] = useMemo(() => [
         {
@@ -78,11 +68,6 @@ export default function AuctionSelect() {
             name: 'send',
             color: Colors[theme].tint
         },
-        // {
-        //     text: 'New Entry',
-        //     name: 'new_entry',
-        //     color: Colors[theme].background
-        // },
         {
             text: 'Deselect All',
             name: 'deselect',
@@ -92,7 +77,8 @@ export default function AuctionSelect() {
 
     const actionFuncs = {
         new_entry: handleEditOpen,
-        send: sendImages
+        send: sendImages,
+        deselect: () => setSelected(new Set())
     } as { [index: string]: () => void };
 
     return (
@@ -123,11 +109,11 @@ export default function AuctionSelect() {
                 iconColor={'gold'}
             />
 
-            <Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>
-                {/*<View style={{padding: 20}}>*/}
-                    <EditOrgModal close={handleEditClose}/>
-                {/*</View>*/}
-            </Modal>
+            {/*<Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>*/}
+            {/*    /!*<View style={{padding: 20}}>*!/*/}
+            {/*    <EditOrgModal close={handleEditClose}/>*/}
+            {/*    /!*</View>*!/*/}
+            {/*</Modal>*/}
 
         </KeyboardDismissView>
     );
