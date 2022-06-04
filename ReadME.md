@@ -7,3 +7,6 @@ This app was designed for the intent of being able to select participants in an 
 ## Usage
 To use this app, follow the instructions [here](https://docs.expo.dev/get-started/installation/)
 
+## Authors
+* Daniel Dawit
+
