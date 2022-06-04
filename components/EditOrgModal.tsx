@@ -1,7 +1,7 @@
 import React from 'react';
-import {Text, View} from "./Themed";
+import {View} from "./Themed";
 
-interface EditOrgModalProps{
+interface EditOrgModalProps {
     close: () => void;
 }
 
@@ -11,7 +11,6 @@ function EditOrgModal({close}: EditOrgModalProps) {
         <View style={{
             padding: 20,
         }}>
-
 
 
         </View>

@@ -7,8 +7,6 @@ import {Organization} from "../database/modules/organizations/Organization";
 import {FloatingAction, IActionProps} from "react-native-floating-action";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from '../constants/Colors';
-import Modal from "react-native-modal";
-import EditOrgModal from "../components/EditOrgModal";
 import {KeyboardDismissView} from "../components/KeyboardDismissView";
 
 export default function AuctionSelect() {
@@ -108,12 +106,6 @@ export default function AuctionSelect() {
                 //@ts-ignore
                 iconColor={'gold'}
             />
-
-            {/*<Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>*/}
-            {/*    /!*<View style={{padding: 20}}>*!/*/}
-            {/*    <EditOrgModal close={handleEditClose}/>*/}
-            {/*    /!*</View>*!/*/}
-            {/*</Modal>*/}
 
         </KeyboardDismissView>
     );

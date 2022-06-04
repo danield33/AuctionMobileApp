@@ -3,7 +3,6 @@ import {View} from '../components/Themed';
 import {RootTabScreenProps} from '../types';
 import {useEffect, useState} from "react";
 import {db} from "../database";
-import {Organization} from "../database/modules/organizations/Organization";
 import OrganizationDisplay from "../components/OrganizationDisplay";
 
 export default function AuctionDisplay({navigation}: RootTabScreenProps<'AuctionDisplay'>) {

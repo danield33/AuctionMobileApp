@@ -3,19 +3,19 @@ import {Organization, OrganizationObj} from "./Organization";
 export class Organizations {
 
     readonly orgs = new Map<string, Organization>();
-    private _winners: string[] = [];
 
-    constructor(orgs: {[index: string]: OrganizationObj}) {
+    constructor(orgs: { [index: string]: OrganizationObj }) {
         this.orgs = this.convert(orgs as unknown as { [id: string]: typeof Organization.prototype });
     }
 
-
-    set winners(value: string[]) {
-        this._winners = value;
-    }
+    private _winners: string[] = [];
 
     get winners(): string[] {
         return this._winners;
+    }
+
+    set winners(value: string[]) {
+        this._winners = value;
     }
 
     convert(orgObj: { [id: string]: OrganizationObj }): Map<string, Organization> {

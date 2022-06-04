@@ -47,7 +47,8 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
                         }}
                         resizeMode={'cover'}
                     /> :
-                    <Ionicons name={'help-circle'} style={{alignSelf: 'center'}} size={height * 0.25} color={isSelected ? '#81e541' : 'white'}/>
+                    <Ionicons name={'help-circle'} style={{alignSelf: 'center'}} size={height * 0.25}
+                              color={isSelected ? '#81e541' : 'white'}/>
 
             }
 
