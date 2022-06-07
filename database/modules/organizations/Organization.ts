@@ -1,3 +1,5 @@
+import {PORT} from "../../../constants/Ports";
+
 export interface OrganizationObj {
     name: string;
     id: string;
@@ -18,7 +20,7 @@ export class Organization implements OrganizationObj {
 
 
     async getImage() {
-        return await fetch("http://localhost:8080/images?id=" + this.id, {mode: "cors"}).then(async (res) => {
+        return await fetch(PORT+"/images?id=" + this.id, {mode: "cors"}).then(async (res) => {
             return await res.json();
         });
     }

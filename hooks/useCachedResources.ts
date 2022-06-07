@@ -3,6 +3,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import {db} from "../database";
+import {PORT} from "../constants/Ports";
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
@@ -19,7 +20,7 @@ export default function useCachedResources() {
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
         });
 
-        await fetch("http://localhost:8080/getData", { mode: "cors" }).then(async (res) => {
+        await fetch(PORT+"/getData", { mode: "cors" }).then(async (res) => {
           const data: any = await res.json();
           return db.init(data);
         });
