@@ -6,6 +6,9 @@ import {ImageInfo, ImagePickerOptions, MediaTypeOptions} from 'expo-image-picker
 import {FlatButton} from "./FlatButton";
 import {useTheme} from "@react-navigation/native";
 import {KeyboardDismissView} from "./KeyboardDismissView";
+import {db} from "../database";
+import * as FileSystem from 'expo-file-system';
+
 
 interface EditOrgModalProps {
     close: () => void;
@@ -106,9 +109,28 @@ function EditOrgModal({close}: EditOrgModalProps) {
         setName(newName);
     }, [name]);
 
-    const saveOrg = useCallback(() => {
+    const saveOrg = useCallback(async () => {
 
-    }, []);
+        let imageBase64 = null;
+        if(image){
+            imageBase64 = await FileSystem.readAsStringAsync(image.uri, { encoding: 'base64' });
+        }
+        console.log(imageBase64);
+
+        db.socket.emit("addNewOrg", {
+            name,
+            description: description,
+            image: imageBase64
+        });
+
+        Alert.alert('Organization Submitted!', '', [
+            {
+                text: 'Ok',
+                onPress: close
+            }
+        ])
+
+    }, [name, description, image]);
 
 
     return (

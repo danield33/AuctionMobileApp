@@ -18,8 +18,7 @@ export default function AuctionDisplay({navigation}: RootTabScreenProps<'Auction
     }, []);
 
     const renderOrg: ListRenderItem<string> = ({item}) => {
-        const org = item;
-        const organization = db.organizations?.orgs.get(org);
+        const organization = db.organizations?.orgs.get(item);
         if (!organization) return null;
 
         return <OrganizationDisplay organization={organization} isSelected={false}/>
