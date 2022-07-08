@@ -8,6 +8,8 @@ import {FloatingAction, IActionProps} from "react-native-floating-action";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from '../constants/Colors';
 import {KeyboardDismissView} from "../components/KeyboardDismissView";
+import Modal from "react-native-modal";
+import EditOrgModal from "../components/EditOrgModal";
 
 export default function AuctionSelect() {
 
@@ -111,6 +113,11 @@ export default function AuctionSelect() {
                 //@ts-ignore
                 iconColor={'gold'}
             />
+
+            <Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>
+                <EditOrgModal close={handleEditClose}/>
+            </Modal>
+
 
         </KeyboardDismissView>
     );

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View} from "./Themed";
+import {TextInput, Text} from "react-native";
 
 interface EditOrgModalProps {
     close: () => void;
@@ -7,11 +8,19 @@ interface EditOrgModalProps {
 
 function EditOrgModal({close}: EditOrgModalProps) {
 
+    const [name, setName] = useState<string>('');
+
     return (
         <View style={{
             padding: 20,
         }}>
 
+            <Text style={{
+                color: 'white'
+            }}>Name:</Text>
+            <TextInput>
+                {name}
+            </TextInput>
 
         </View>
     );
