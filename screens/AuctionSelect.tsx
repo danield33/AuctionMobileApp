@@ -64,13 +64,18 @@ export default function AuctionSelect() {
         {
             text: 'Send',
             name: 'send',
-            color: Colors[theme].tint
+            color: Colors[theme].tabIconDefault
         },
         {
             text: 'Deselect All',
             name: 'deselect',
-            color: Colors[theme].background
+            color: Colors[theme].tabIconDefault
         },
+        {
+            text: 'Add Organization',
+            name: 'new_entry',
+            color: Colors[theme].tabIconDefault
+        }
     ], []);
 
     const actionFuncs = {
