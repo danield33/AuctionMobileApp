@@ -114,7 +114,7 @@ export default function AuctionSelect() {
                 iconColor={'gold'}
             />
 
-            <Modal isVisible={editModalOpen} onBackdropPress={handleEditClose}>
+            <Modal isVisible={editModalOpen} onBackdropPress={handleEditClose} avoidKeyboard={true}>
                 <EditOrgModal close={handleEditClose}/>
             </Modal>
 
