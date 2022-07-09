@@ -19,8 +19,8 @@ export class Organization implements OrganizationObj {
     }
 
 
-    async getImage(): Promise<string|null> {
-        return await fetch(PORT+"/images?id=" + this.id, {mode: "cors"}).then(async (res) => {
+    async getImage(): Promise<string | null> {
+        return await fetch(PORT + "/images?id=" + this.id, {mode: "cors"}).then(async (res) => {
             return await res.json();
         });
     }

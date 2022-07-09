@@ -9,7 +9,7 @@ interface FlatButtonProps {
 
 }
 
-export function FlatButton({onPress, text, color='#ccc'}: FlatButtonProps) {
+export function FlatButton({onPress, text, color = '#ccc'}: FlatButtonProps) {
     return (
         <TouchableOpacity style={{
             backgroundColor: color,
@@ -24,4 +24,4 @@ export function FlatButton({onPress, text, color='#ccc'}: FlatButtonProps) {
             }}>{text}</Text>
         </TouchableOpacity>
     );
-};
+}
