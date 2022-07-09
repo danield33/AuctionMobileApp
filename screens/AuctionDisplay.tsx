@@ -12,8 +12,6 @@ export default function AuctionDisplay({navigation}: RootTabScreenProps<'Auction
     useEffect(() => {
         db.socket.on("displayNewWinners", (winnerIDs: string[]) => {
             setIDs(winnerIDs);
-            console.log(winnerIDs)
-            db.organizations!.winners = winnerIDs;
         });
     }, []);
 
