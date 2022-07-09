@@ -23,6 +23,22 @@ const options: ImagePickerOptions = {
     base64: false
 }
 
+const base64Signatures: {[index: string]: string} = {
+    JVBERi0: "application/pdf",
+    R0lGODdh: "image/gif",
+    R0lGODlh: "image/gif",
+    iVBORw0KGgo: "image/png",
+    "/9j/": "image/jpeg"
+} as const;
+
+const getMimeType = (b64: string) =>  {
+    for (const s in base64Signatures) {
+        if (b64.indexOf(s) === 0) {
+            return base64Signatures[s];
+        }
+    }
+}
+
 function EditOrgModal({close}: EditOrgModalProps) {
 
     const [name, setName] = useState<string>('');
@@ -111,16 +127,17 @@ function EditOrgModal({close}: EditOrgModalProps) {
 
     const saveOrg = useCallback(async () => {
 
-        let imageBase64 = null;
+        let imageString;
         if(image){
-            imageBase64 = await FileSystem.readAsStringAsync(image.uri, { encoding: 'base64' });
+            let imageBase64 = (await FileSystem.readAsStringAsync(image.uri, { encoding: FileSystem.EncodingType.Base64 }));
+            imageString = `data:${getMimeType(imageBase64)};base64,${imageBase64}`
         }
-        console.log(imageBase64);
 
+        console.log(imageString)
         db.socket.emit("addNewOrg", {
             name,
             description: description,
-            image: imageBase64
+            image: imageString
         });
 
         Alert.alert('Organization Submitted!', '', [
