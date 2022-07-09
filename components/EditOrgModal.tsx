@@ -1,5 +1,4 @@
-import React, {useCallback, useState} from 'react';
-import {View} from "./Themed";
+import React, {useCallback, useEffect, useState} from 'react';
 import {Alert, Image, LayoutAnimation, StyleSheet, Text, TextInput} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import {ImageInfo, ImagePickerOptions, MediaTypeOptions} from 'expo-image-picker';
@@ -8,10 +7,12 @@ import {useTheme} from "@react-navigation/native";
 import {KeyboardDismissView} from "./KeyboardDismissView";
 import {db} from "../database";
 import * as FileSystem from 'expo-file-system';
+import {Organization} from "../database/modules/organizations/Organization";
 
 
 interface EditOrgModalProps {
     close: () => void;
+    organization?: Organization;
 }
 
 
@@ -24,7 +25,7 @@ const options: ImagePickerOptions = {
     base64: false
 }
 
-const base64Signatures: {[index: string]: string} = {
+const base64Signatures: { [index: string]: string } = {
     JVBERi0: "application/pdf",
     R0lGODdh: "image/gif",
     R0lGODlh: "image/gif",
@@ -33,7 +34,7 @@ const base64Signatures: {[index: string]: string} = {
 } as const;
 
 
-const getMimeType = (b64: string) =>  {
+const getMimeType = (b64: string) => {
     for (const s in base64Signatures) {
         if (b64.indexOf(s) === 0) {
             return base64Signatures[s];
@@ -41,15 +42,21 @@ const getMimeType = (b64: string) =>  {
     }
 }
 
-function EditOrgModal({close}: EditOrgModalProps) {
+function EditOrgModal({close, organization}: EditOrgModalProps) {
 
-    const [name, setName] = useState<string>('');
-    const [description, setDesc] = useState<string>('');
+    const [name, setName] = useState<string>(organization?.name || '');
+    const [description, setDesc] = useState<string>(organization?.description || '');
     const [statusCam, requestPermissionCam] = ImagePicker.useCameraPermissions();
     const [statusLib, requestPermissionLib] = ImagePicker.useMediaLibraryPermissions();
-    const [image, setImage] = useState<ImageInfo | null>(null);
+    const [image, setImage] = useState<ImageInfo | string | null>(null);
 
     const {colors} = useTheme();
+
+    useEffect(() => {
+        organization?.getImage().then(r => {
+            setImage(r);
+        })
+    }, []);
 
 
     const takePicture = useCallback(() => {
@@ -121,7 +128,7 @@ function EditOrgModal({close}: EditOrgModalProps) {
     }, []);
 
     const changeName = useCallback((newName: string) => {
-        if(!name.length || !newName.length ){
+        if (!name.length || !newName.length) {
             LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         }
         setName(newName);
@@ -129,18 +136,29 @@ function EditOrgModal({close}: EditOrgModalProps) {
 
     const saveOrg = useCallback(async () => {
 
-        let imageString;
-        if(image){
-            let imageBase64 = (await FileSystem.readAsStringAsync(image.uri, { encoding: FileSystem.EncodingType.Base64 }));
+        let imageString = typeof image === 'string' ? image : undefined;
+        if (image && typeof image !== 'string') {
+            let imageBase64 = (await FileSystem.readAsStringAsync(image.uri, {encoding: FileSystem.EncodingType.Base64}));
             imageString = `data:${getMimeType(imageBase64)};base64,${imageBase64}`
         }
 
-        console.log(imageString)
-        db.socket.emit("addNewOrg", {
-            name,
-            description,
-            image: imageString
-        });
+        if (!organization)
+            db.socket.emit("addNewOrg", {
+                name,
+                description,
+                image: imageString
+            });
+        else{
+            if (!imageString) {
+                db.socket.emit("deleteImage", organization.id);
+            }
+            db.socket.emit('updateOrg', {
+                name,
+                description,
+                image: imageString,
+                id: organization.id
+            })
+        }
 
         Alert.alert('Organization Submitted!', '', [
             {
@@ -151,6 +169,23 @@ function EditOrgModal({close}: EditOrgModalProps) {
 
     }, [name, description, image]);
 
+    const deleteOrg = useCallback(() => {
+        if(!organization) return;
+        Alert.alert(`Delete ${name}?`, 'Are you sure you want to delete this organization?', [
+            {
+                text: 'Yes',
+                style: 'destructive',
+                onPress: () => {
+                    db.socket.emit("deleteOrg", organization.id);
+                }
+
+            },
+            {
+                text: 'Cancel',
+                style: 'cancel'
+            }
+        ])
+    }, [organization]);
 
     return (
         <KeyboardDismissView style={{
@@ -170,7 +205,7 @@ function EditOrgModal({close}: EditOrgModalProps) {
 
             {
                 image != null ?
-                    <Image source={{uri: image?.uri}} style={{
+                    <Image source={{uri: typeof image === 'string' ? image : image?.uri}} style={{
                         width: '100%',
                         height: '45%',
                         resizeMode: 'contain'
@@ -182,7 +217,12 @@ function EditOrgModal({close}: EditOrgModalProps) {
 
             {
                 name.length ?
-                <FlatButton text={'Save'} color={colors.notification} onPress={saveOrg}/>
+                    <FlatButton text={'Save'} color={'#008f06'} onPress={saveOrg}/>
+                    : null
+            }
+            {
+                organization ?
+                    <FlatButton text={'Delete'} color={colors.notification} onPress={deleteOrg}/>
                     : null
             }
 

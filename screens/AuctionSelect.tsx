@@ -80,11 +80,11 @@ export default function AuctionSelect() {
         }
     ], []);
 
-    const actionFuncs = {
+    const actionFuncs: { [index: string]: () => void } = {
         new_entry: handleEditOpen,
         send: sendImages,
         deselect: () => setSelected(new Set())
-    } as { [index: string]: () => void };
+    };
 
     return (
         <KeyboardDismissView style={styles.container}>
