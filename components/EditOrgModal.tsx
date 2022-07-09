@@ -14,10 +14,11 @@ interface EditOrgModalProps {
     close: () => void;
 }
 
+
 const options: ImagePickerOptions = {
     allowsEditing: true,
     aspect: [4, 3],
-    quality: 0.5,
+    quality: 0,
     mediaTypes: MediaTypeOptions.Images,
     allowsMultipleSelection: false,
     base64: false
@@ -30,6 +31,7 @@ const base64Signatures: {[index: string]: string} = {
     iVBORw0KGgo: "image/png",
     "/9j/": "image/jpeg"
 } as const;
+
 
 const getMimeType = (b64: string) =>  {
     for (const s in base64Signatures) {
@@ -136,7 +138,7 @@ function EditOrgModal({close}: EditOrgModalProps) {
         console.log(imageString)
         db.socket.emit("addNewOrg", {
             name,
-            description: description,
+            description,
             image: imageString
         });
 
