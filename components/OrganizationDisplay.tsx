@@ -21,7 +21,7 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
             setImage(img);
         });
         getImage();
-    }, []);
+    }, [organization]);
 
     const click = useCallback(() => {
         onClick?.(organization.id);

@@ -33,7 +33,7 @@ export default function AuctionSelect() {
     const renderOrg: ListRenderItem<[string, Organization]> = useCallback(({item}) => {
         const [id, org] = item;
         if (!org) return null;
-        if (!org.name.toLowerCase().includes(searchText.toLowerCase())) return null;
+        if (!org.id.toLowerCase().includes(searchText.toLowerCase())) return null;
 
         return <OrganizationDisplay organization={org} onClick={selectImage} isSelected={selectedIDs.has(id)}/>
     }, [selectedIDs, searchText])
@@ -96,7 +96,7 @@ export default function AuctionSelect() {
                 fontWeight: '500',
                 margin: 10,
                 borderRadius: 5
-            }} placeholder={'Search'} placeholderTextColor={'black'} onChange={e => {
+            }} placeholder={'Search by ID'} placeholderTextColor={'black'} onChange={e => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 setSearched(e.nativeEvent.text);
             }}/>
