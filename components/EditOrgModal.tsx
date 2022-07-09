@@ -148,7 +148,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
                 description,
                 image: imageString
             });
-        else{
+        else {
             if (!imageString) {
                 db.socket.emit("deleteImage", organization.id);
             }
@@ -170,7 +170,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
     }, [name, description, image]);
 
     const deleteOrg = useCallback(() => {
-        if(!organization) return;
+        if (!organization) return;
         Alert.alert(`Delete ${name}?`, 'Are you sure you want to delete this organization?', [
             {
                 text: 'Yes',
