@@ -190,7 +190,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
     return (
         <KeyboardDismissView style={{
             padding: 20,
-            backgroundColor: colors.background
+            backgroundColor: 'black'
         }}>
 
             <Text style={styles.textName}>* Name:</Text>
