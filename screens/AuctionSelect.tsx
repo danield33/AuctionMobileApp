@@ -28,7 +28,8 @@ export default function AuctionSelect() {
             const map = db.organizations?.orgs ?? new Map();
             setOrgs(map);
         });
-    }, [])
+    }, []);
+
 
     const renderOrg: ListRenderItem<[string, Organization]> = useCallback(({item}) => {
         const [id, org] = item;
@@ -78,7 +79,7 @@ export default function AuctionSelect() {
             name: 'new_entry',
             color: Colors[theme].tabIconDefault
         }
-    ], []);
+    ], [selectedIDs]);
 
     const actionFuncs: { [index: string]: () => void } = {
         new_entry: handleEditOpen,
@@ -90,7 +91,7 @@ export default function AuctionSelect() {
         <KeyboardDismissView style={styles.container}>
 
             <TextInput style={{
-                backgroundColor: Colors[theme].tint,
+                backgroundColor: '#ccc',
                 width: '90%',
                 fontSize: 20,
                 fontWeight: '500',
@@ -101,7 +102,7 @@ export default function AuctionSelect() {
                 setSearched(e.nativeEvent.text);
             }}/>
 
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, width: '100%'}}>
                 <FlatList data={[...organizations]}
                           renderItem={renderOrg}
                           keyExtractor={(org: [string, Organization]) => org[0]}/>

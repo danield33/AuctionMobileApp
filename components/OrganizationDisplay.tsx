@@ -15,7 +15,7 @@ interface OrganizationDisplayProps {
 function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDisplayProps) {
 
     const [image, setImage] = useState('');
-    const {description, name} = organization;
+    const {description, name, id} = organization;
     const [editOpen, setEdit] = useState(false),
         handleOpen = () => setEdit(true),
         handleClose = () => setEdit(false);
@@ -28,9 +28,9 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
         getImage();
     }, [organization]);
 
-    const click = useCallback(() => {
+    const click = () => {
         onClick?.(organization.id);
-    }, [])
+    }
 
     const {width, height} = Layout.window;
     return (
@@ -45,7 +45,7 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
                                 height: height * 0.25,
                                 marginVertical: 10,
                                 //@ts-ignore
-                                borderWidth: 5 * Boolean(isSelected),
+                                borderWidth: isSelected ? 5 : 0,
                                 borderColor: isSelected ? '#81e541' : undefined
                             }}
                             source={{
@@ -54,7 +54,7 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
                             resizeMode={'cover'}
                         /> :
                         <Ionicons name={'help-circle'} style={{alignSelf: 'center'}} size={height * 0.25}
-                                  color={isSelected ? '#81e541' : 'white'}/>
+                                  color={isSelected ? '#81e541' : '#ccc'}/>
 
                 }
 
@@ -70,7 +70,7 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
                         color: 'white',
                         fontWeight: '600',
                         fontSize: 15
-                    }}>{name}</Text>
+                    }}>{name} (ID: {id})</Text>
                     <Text numberOfLines={3} adjustsFontSizeToFit style={{
                         color: 'white',
                         fontWeight: '500'

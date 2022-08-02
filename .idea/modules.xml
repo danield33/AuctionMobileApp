@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/AuctionMobileApp.iml" filepath="$PROJECT_DIR$/.idea/AuctionMobileApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../AuctionWebsocket/.idea/AuctionWebsocket.iml" filepath="$PROJECT_DIR$/../AuctionWebsocket/.idea/AuctionWebsocket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../DelawareCountyAuction/.idea/DelawareCountyAuction.iml" filepath="$PROJECT_DIR$/../DelawareCountyAuction/.idea/DelawareCountyAuction.iml" />
     </modules>
   </component>
 </project>
