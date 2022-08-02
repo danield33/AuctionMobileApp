@@ -2,10 +2,11 @@
   "expo": {
     "name": "AuctionMobileApp",
     "slug": "AuctionMobileApp",
+    "owner": "danield33",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "auctionapp",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -19,7 +20,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.danield33.AuctionMobileApp"
     },
     "android": {
       "adaptiveIcon": {
