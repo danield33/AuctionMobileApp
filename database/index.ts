@@ -1,4 +1,4 @@
-import {Organizations} from "./modules/organizations";
+import {Buyers} from "./modules/organizations";
 import {OrganizationObj} from "./modules/organizations/Organization";
 import {PORT} from "../constants/Ports";
 
@@ -7,7 +7,7 @@ const io = require("socket.io-client");
 class Auction {
 
     readonly socket;
-    organizations?: Organizations;
+    organizations?: Buyers;
 
     constructor() {
         this.socket = io("ws://" + PORT.substring(8));
@@ -20,7 +20,7 @@ class Auction {
     }
 
     init(data: { participants: { [index: string]: OrganizationObj } }) {
-        this.organizations = new Organizations(data.participants);
+        this.organizations = new Buyers(data.participants);
         this._isInitialized = true;
     }
 }

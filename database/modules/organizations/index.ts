@@ -1,11 +1,14 @@
 import {Organization, OrganizationObj} from "./Organization";
+import {DatabaseReference, getDatabase, ref} from "firebase/database";
 
-export class Organizations {
+export class Buyers {
 
     readonly orgs = new Map<string, Organization>();
+    readonly #ref = ref(getDatabase(), 'buyers')
 
     constructor(orgs: { [index: string]: OrganizationObj }) {
         this.orgs = this.convert(orgs as unknown as { [id: string]: typeof Organization.prototype });
+
     }
 
     private _winners: string[] = [];
