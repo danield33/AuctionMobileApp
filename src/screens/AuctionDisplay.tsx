@@ -4,16 +4,14 @@ import {RootTabScreenProps} from '../../types';
 import {useEffect, useState} from "react";
 import {db} from "../database";
 import OrganizationDisplay from "../components/OrganizationDisplay";
+import React from 'react';
+import {useBuyerHook} from "../hooks/useBuyers";
 
 export default function AuctionDisplay({navigation}: RootTabScreenProps<'AuctionDisplay'>) {
 
     const [orgIDs, setIDs] = useState<string[]>(db.buyers?.winners ?? []);
+    const {} = useBuyerHook();
 
-    useEffect(() => {
-        db.socket.on("displayNewWinners", (winnerIDs: string[]) => {
-            setIDs(winnerIDs);
-        });
-    }, []);
 
     const renderOrg: ListRenderItem<string> = ({item}) => {
         const organization = db.buyers?.orgs.get(item);

@@ -1,18 +1,18 @@
 import {PORT} from "../../../constants/Ports";
 
-export interface OrganizationObj {
+export interface BuyerObj {
     name: string;
     id: string;
     description: string;
 }
 
-export class Organization implements OrganizationObj {
+export class Buyer implements BuyerObj {
 
     name: string;
     id: string;
     description: string;
 
-    constructor(organization: OrganizationObj) {
+    constructor(organization: BuyerObj) {
         this.name = organization.name;
         this.id = organization.id;
         this.description = organization.description;

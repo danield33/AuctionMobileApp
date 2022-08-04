@@ -7,12 +7,12 @@ import {useTheme} from "@react-navigation/native";
 import {KeyboardDismissView} from "./KeyboardDismissView";
 import {db} from "../database";
 import * as FileSystem from 'expo-file-system';
-import {Organization} from "../database/modules/organizations/Organization";
+import {Buyer, BuyerObj} from "../database/modules/organizations/Buyer";
 
 
 interface EditOrgModalProps {
     close: () => void;
-    organization?: Organization;
+    buyer?: BuyerObj;
 }
 
 
@@ -42,10 +42,10 @@ const getMimeType = (b64: string) => {
     }
 }
 
-function EditOrgModal({close, organization}: EditOrgModalProps) {
+function EditOrgModal({close, buyer}: EditOrgModalProps) {
 
-    const [name, setName] = useState<string>(organization?.name || '');
-    const [description, setDesc] = useState<string>(organization?.description || '');
+    const [name, setName] = useState<string>(buyer?.name || '');
+    const [description, setDesc] = useState<string>(buyer?.description || '');
     const [statusCam, requestPermissionCam] = ImagePicker.useCameraPermissions();
     const [statusLib, requestPermissionLib] = ImagePicker.useMediaLibraryPermissions();
     const [image, setImage] = useState<ImageInfo | string | null>(null);
@@ -53,7 +53,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
     const {colors} = useTheme();
 
     useEffect(() => {
-        organization?.getImage().then(r => {
+        buyer?.getImage().then(r => {
             setImage(r);
         })
     }, []);
@@ -142,7 +142,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
             imageString = `data:${getMimeType(imageBase64)};base64,${imageBase64}`
         }
 
-        if (!organization)
+        if (!buyer)
             db.socket.emit("addNewOrg", {
                 name,
                 description,
@@ -150,13 +150,13 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
             });
         else {
             if (!imageString) {
-                db.socket.emit("deleteImage", organization.id);
+                db.socket.emit("deleteImage", buyer.id);
             }
             db.socket.emit('updateOrg', {
                 name,
                 description,
                 image: imageString,
-                id: organization.id
+                id: buyer.id
             })
         }
 
@@ -170,13 +170,13 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
     }, [name, description, image]);
 
     const deleteOrg = useCallback(() => {
-        if (!organization) return;
+        if (!buyer) return;
         Alert.alert(`Delete ${name}?`, 'Are you sure you want to delete this organization?', [
             {
                 text: 'Yes',
                 style: 'destructive',
                 onPress: () => {
-                    db.socket.emit("deleteOrg", organization.id);
+                    db.socket.emit("deleteOrg", buyer.id);
                 }
 
             },
@@ -185,7 +185,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
                 style: 'cancel'
             }
         ])
-    }, [organization]);
+    }, [buyer]);
 
     return (
         <KeyboardDismissView style={{
@@ -221,7 +221,7 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
                     : null
             }
             {
-                organization ?
+                buyer ?
                     <FlatButton text={'Delete'} color={colors.notification} onPress={deleteOrg}/>
                     : null
             }

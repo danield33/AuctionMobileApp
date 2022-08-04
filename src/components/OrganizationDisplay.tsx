@@ -1,35 +1,36 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Image, Text, TouchableOpacity, View} from "react-native";
-import {Organization} from "../database/modules/organizations/Organization";
+import {Buyer, BuyerObj} from "../database/modules/organizations/Buyer";
 import Layout from "../constants/Layout";
 import {Ionicons} from "@expo/vector-icons";
 import EditOrgModal from "./EditOrgModal";
 import Modal from "react-native-modal";
+import {useBuyerHook} from "../hooks/useBuyers";
 
 interface OrganizationDisplayProps {
-    organization: Organization;
+    buyer: BuyerObj;
     onClick?: (id: string) => void;
     isSelected: boolean
 }
 
-function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDisplayProps) {
+function OrganizationDisplay({buyer, isSelected, onClick}: OrganizationDisplayProps) {
 
     const [image, setImage] = useState('');
-    const {description, name, id} = organization;
+    const {description, name, id} = buyer;
     const [editOpen, setEdit] = useState(false),
         handleOpen = () => setEdit(true),
         handleClose = () => setEdit(false);
 
 
     useEffect(() => {
-        const getImage = () => organization.getImage().then(img => {
+        const getImage = () => buyer.getImage().then(img => {
             setImage(img ?? '');
         });
         getImage();
-    }, [organization]);
+    }, [buyer]);
 
     const click = () => {
-        onClick?.(organization.id);
+        onClick?.(buyer.id);
     }
 
     const {width, height} = Layout.window;
@@ -79,7 +80,7 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
 
             </TouchableOpacity>
             <Modal isVisible={editOpen} onBackdropPress={handleClose} avoidKeyboard={true}>
-                <EditOrgModal close={handleClose} organization={organization}/>
+                <EditOrgModal close={handleClose} buyer={buyer}/>
             </Modal>
         </>
     );

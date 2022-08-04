@@ -1,14 +1,13 @@
-import {Organization, OrganizationObj} from "./Organization";
+import {Buyer, BuyerObj} from "./Buyer";
 import {DatabaseReference, getDatabase, ref} from "firebase/database";
 
 export class Buyers {
 
-    readonly orgs = new Map<string, Organization>();
-    readonly #ref = ref(getDatabase(), 'buyers')
+    readonly orgs = new Map<string, Buyer>();
+    static readonly ref = ref(getDatabase(), 'buyers')
 
-    constructor(orgs: { [index: string]: OrganizationObj }) {
-        this.orgs = this.convert(orgs as unknown as { [id: string]: typeof Organization.prototype });
-
+    constructor(orgs: { [index: string]: BuyerObj }) {
+        this.orgs = this.convert(orgs);
     }
 
     private _winners: string[] = [];
@@ -21,9 +20,13 @@ export class Buyers {
         this._winners = value;
     }
 
-    convert(orgObj: { [id: string]: OrganizationObj }): Map<string, Organization> {
+    create(){
+
+    }
+
+    convert(orgObj: { [id: string]: BuyerObj }): Map<string, Buyer> {
         const entries: Array<any> = Object.entries(orgObj)
-            .map(i => [i[0], new Organization(i[1])]);
+            .map(i => [i[0], new Buyer(i[1])]);
         return new Map(entries);
     }
 

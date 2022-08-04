@@ -6,6 +6,7 @@ import useColorScheme from './src/hooks/useColorScheme';
 import Navigation from './src/navigation';
 import {Platform, UIManager} from "react-native";
 import React from 'react';
+import {BuyerInfoContextProvider} from "./src/contexts/BuyerInfoContext";
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
     UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -21,8 +22,10 @@ export default function App() {
 
         return (
             <SafeAreaProvider>
-                <Navigation colorScheme={colorScheme}/>
-                <StatusBar/>
+                <BuyerInfoContextProvider>
+                    <Navigation colorScheme={colorScheme}/>
+                    <StatusBar/>
+                </BuyerInfoContextProvider>
             </SafeAreaProvider>
         );
     }

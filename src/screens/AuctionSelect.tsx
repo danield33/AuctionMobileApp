@@ -3,18 +3,21 @@ import {View} from '../components/Themed';
 import {useCallback, useEffect, useMemo, useState} from "react";
 import {db} from "../database";
 import OrganizationDisplay from "../components/OrganizationDisplay";
-import {Organization} from "../database/modules/organizations/Organization";
+import {Buyer, BuyerObj} from "../database/modules/organizations/Buyer";
 import {FloatingAction, IActionProps} from "react-native-floating-action";
 import useColorScheme from "../hooks/useColorScheme";
 import Colors from '../constants/Colors';
 import {KeyboardDismissView} from "../components/KeyboardDismissView";
 import Modal from "react-native-modal";
 import EditOrgModal from "../components/EditOrgModal";
+import React from 'react';
+import {useBuyerHook} from "../hooks/useBuyers";
+import {BuyersList} from "../contexts/BuyerInfoContext";
 
 export default function AuctionSelect() {
 
+    const {buyers} = useBuyerHook();
     const [selectedIDs, setSelected] = useState<Set<string>>(new Set());
-    const [organizations, setOrgs] = useState(db.buyers?.orgs ?? new Map());
     const [searchText, setSearched] = useState('');
 
     const theme = useColorScheme();
@@ -22,21 +25,13 @@ export default function AuctionSelect() {
         handleEditOpen = () => setEditModalOpen(true),
         handleEditClose = () => setEditModalOpen(false);
 
-    useEffect(() => {
-        db.socket.on("dataUpdate", (data: any) => {
-            db.init(data);
-            const map = db.buyers?.orgs ?? new Map();
-            setOrgs(map);
-        });
-    }, []);
 
+    const renderOrg: ListRenderItem<string> = useCallback(({item: id}) => {
+        const buyer = buyers[id];
+        if (!buyer) return null;
+        if (!buyer.id.toLowerCase().includes(searchText.toLowerCase())) return null;
 
-    const renderOrg: ListRenderItem<[string, Organization]> = useCallback(({item}) => {
-        const [id, org] = item;
-        if (!org) return null;
-        if (!org.id.toLowerCase().includes(searchText.toLowerCase())) return null;
-
-        return <OrganizationDisplay organization={org} onClick={selectImage} isSelected={selectedIDs.has(id)}/>
+        return <OrganizationDisplay buyer={buyer} onClick={selectImage} isSelected={selectedIDs.has(id)}/>
     }, [selectedIDs, searchText])
 
     const selectImage = useCallback((id: string) => {
@@ -103,9 +98,9 @@ export default function AuctionSelect() {
             }}/>
 
             <View style={{flex: 1, width: '100%'}}>
-                <FlatList data={[...organizations]}
+                <FlatList data={[...Object.keys(buyers)]}
                           renderItem={renderOrg}
-                          keyExtractor={(org: [string, Organization]) => org[0]}/>
+                          keyExtractor={(org: string) => org}/>
             </View>
 
             <FloatingAction
