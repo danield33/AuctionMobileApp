@@ -1,13 +1,13 @@
 import {FlatList, ListRenderItem, StyleSheet} from 'react-native';
 import {View} from '../components/Themed';
-import {RootTabScreenProps} from '../types';
+import {RootTabScreenProps} from '../../types';
 import {useEffect, useState} from "react";
 import {db} from "../database";
 import OrganizationDisplay from "../components/OrganizationDisplay";
 
 export default function AuctionDisplay({navigation}: RootTabScreenProps<'AuctionDisplay'>) {
 
-    const [orgIDs, setIDs] = useState<string[]>(db.organizations?.winners ?? []);
+    const [orgIDs, setIDs] = useState<string[]>(db.buyers?.winners ?? []);
 
     useEffect(() => {
         db.socket.on("displayNewWinners", (winnerIDs: string[]) => {
@@ -16,7 +16,7 @@ export default function AuctionDisplay({navigation}: RootTabScreenProps<'Auction
     }, []);
 
     const renderOrg: ListRenderItem<string> = ({item}) => {
-        const organization = db.organizations?.orgs.get(item);
+        const organization = db.buyers?.orgs.get(item);
         if (!organization) return null;
 
         return <OrganizationDisplay organization={organization} isSelected={false}/>

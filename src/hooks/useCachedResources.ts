@@ -17,7 +17,7 @@ export default function useCachedResources() {
                 // Load fonts
                 await Font.loadAsync({
                     ...FontAwesome.font,
-                    'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+                    'space-mono': require('../../assets/fonts/SpaceMono-Regular.ttf'),
                 });
 
                 await fetch(PORT + "/getData", {mode: "cors"}).then(async (res) => {

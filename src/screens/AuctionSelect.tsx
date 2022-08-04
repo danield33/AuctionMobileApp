@@ -14,7 +14,7 @@ import EditOrgModal from "../components/EditOrgModal";
 export default function AuctionSelect() {
 
     const [selectedIDs, setSelected] = useState<Set<string>>(new Set());
-    const [organizations, setOrgs] = useState(db.organizations?.orgs ?? new Map());
+    const [organizations, setOrgs] = useState(db.buyers?.orgs ?? new Map());
     const [searchText, setSearched] = useState('');
 
     const theme = useColorScheme();
@@ -25,7 +25,7 @@ export default function AuctionSelect() {
     useEffect(() => {
         db.socket.on("dataUpdate", (data: any) => {
             db.init(data);
-            const map = db.organizations?.orgs ?? new Map();
+            const map = db.buyers?.orgs ?? new Map();
             setOrgs(map);
         });
     }, []);

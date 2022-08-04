@@ -9,7 +9,7 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import AuctionDisplay from '../screens/AuctionDisplay';
 import AuctionSelect from '../screens/AuctionSelect';
-import {RootStackParamList, RootTabParamList, RootTabScreenProps} from '../types';
+import {RootStackParamList, RootTabParamList, RootTabScreenProps} from '../../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
 export default function Navigation({colorScheme}: { colorScheme: ColorSchemeName }) {
