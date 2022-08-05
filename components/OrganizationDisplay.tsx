@@ -14,7 +14,7 @@ interface OrganizationDisplayProps {
 
 function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDisplayProps) {
 
-    const [image, setImage] = useState('');
+    const [image, setImage] = useState<string>('');
     const {description, name, id} = organization;
     const [editOpen, setEdit] = useState(false),
         handleOpen = () => setEdit(true),
@@ -22,10 +22,11 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
 
 
     useEffect(() => {
-        const getImage = () => organization.getImage().then(img => {
-            setImage(img ?? '');
+        organization.getImage().then(img => {
+            setImage('');
+            if(img)
+            setImage(img);
         });
-        getImage();
     }, [organization]);
 
     const click = () => {

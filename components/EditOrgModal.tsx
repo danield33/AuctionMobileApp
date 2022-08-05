@@ -213,6 +213,8 @@ function EditOrgModal({close, organization}: EditOrgModalProps) {
                     : null
             }
 
+
+
             <FlatButton text={'Upload Image'} onPress={uploadImage}/>
 
             {
