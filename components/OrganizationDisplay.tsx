@@ -24,8 +24,8 @@ function OrganizationDisplay({organization, isSelected, onClick}: OrganizationDi
     useEffect(() => {
         organization.getImage().then(img => {
             setImage('');
-            if(img)
-            setImage(img);
+            if (img)
+                setImage(img);
         });
     }, [organization]);
 
